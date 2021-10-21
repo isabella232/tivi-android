@@ -101,6 +101,8 @@ import coil.compose.rememberImagePainter
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
+import io.sentry.Sentry
+import io.sentry.SpanStatus
 import org.threeten.bp.OffsetDateTime
 import kotlin.math.absoluteValue
 import kotlin.math.hypot
@@ -109,9 +111,15 @@ import kotlin.math.hypot
 fun EpisodeDetails(
     navigateUp: () -> Unit,
 ) {
+    Sentry.getSpan()?.finish(SpanStatus.OK)
+
+    val transaction = Sentry.startTransaction("EpisodeDetails", "ui.screen.interaction", true)
     EpisodeDetails(
         viewModel = hiltViewModel(),
-        navigateUp = navigateUp,
+        navigateUp = {
+            transaction.finish(SpanStatus.OK)
+            navigateUp()
+        },
     )
 }
 
@@ -135,7 +143,7 @@ internal fun EpisodeDetails(
 @Composable
 internal fun EpisodeDetails(
     viewState: EpisodeDetailsViewState,
-    actioner: (EpisodeDetailsAction) -> Unit
+    actioner: (EpisodeDetailsAction) -> Unit,
 ) {
     Box {
         Column {
@@ -266,7 +274,7 @@ internal fun EpisodeDetails(
 private fun Backdrop(
     season: Season,
     episode: Episode,
-    modifier: Modifier
+    modifier: Modifier,
 ) {
     Surface(modifier = modifier) {
         Box(Modifier.fillMaxSize()) {
@@ -461,7 +469,7 @@ private fun EpisodeWatch(episodeWatchEntry: EpisodeWatchEntry) {
 @Composable
 private fun EpisodeWatchSwipeBackground(
     swipeProgress: Float,
-    wouldCompleteOnRelease: Boolean = false
+    wouldCompleteOnRelease: Boolean = false,
 ) {
     var iconCenter by remember { mutableStateOf(Offset(0f, 0f)) }
     val maxRadius = hypot(iconCenter.x.toDouble(), iconCenter.y.toDouble())
@@ -510,7 +518,7 @@ private fun EpisodeWatchSwipeBackground(
 private fun Modifier.drawGrowingCircle(
     color: Color,
     center: Offset,
-    radius: Float
+    radius: Float,
 ) = drawWithContent {
     drawContent()
 
@@ -526,7 +534,7 @@ private fun Modifier.drawGrowingCircle(
 @Composable
 private fun MarkWatchedButton(
     modifier: Modifier = Modifier,
-    actioner: (EpisodeDetailsAction) -> Unit
+    actioner: (EpisodeDetailsAction) -> Unit,
 ) {
     Button(
         modifier = modifier,
@@ -542,7 +550,7 @@ private fun MarkWatchedButton(
 @Composable
 private fun AddWatchButton(
     modifier: Modifier = Modifier,
-    actioner: (EpisodeDetailsAction) -> Unit
+    actioner: (EpisodeDetailsAction) -> Unit,
 ) {
     OutlinedButton(
         modifier = modifier,
@@ -555,7 +563,7 @@ private fun AddWatchButton(
 @Composable
 private fun RemoveAllWatchesDialog(
     actioner: (EpisodeDetailsAction) -> Unit,
-    onDialogClosed: () -> Unit
+    onDialogClosed: () -> Unit,
 ) {
     TiviAlertDialog(
         title = stringResource(R.string.episode_remove_watches_dialog_title),
@@ -576,7 +584,7 @@ private fun EpisodeDetailsAppBar(
     isRefreshing: Boolean,
     actioner: (EpisodeDetailsAction) -> Unit,
     elevation: Dp,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     TopAppBar(
         title = {},

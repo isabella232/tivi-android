@@ -141,6 +141,8 @@ import com.google.accompanist.insets.ui.TopAppBar
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import dev.chrisbanes.snapper.SnapOffsets
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
+import io.sentry.Sentry
+import io.sentry.SpanStatus
 import org.threeten.bp.OffsetDateTime
 
 @Composable
@@ -150,9 +152,15 @@ fun ShowDetails(
     openEpisodeDetails: (episodeId: Long) -> Unit,
     openSeasons: (showId: Long, seasonId: Long) -> Unit,
 ) {
+    Sentry.getSpan()?.finish(SpanStatus.OK)
+
+    val transaction = Sentry.startTransaction("ShowDetails", "ui.screen.interaction", true)
     ShowDetails(
         viewModel = hiltViewModel(),
-        navigateUp = navigateUp,
+        navigateUp = {
+            transaction.finish(SpanStatus.OK)
+            navigateUp()
+        },
         openShowDetails = openShowDetails,
         openEpisodeDetails = openEpisodeDetails,
         openSeasons = openSeasons,

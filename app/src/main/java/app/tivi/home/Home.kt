@@ -71,6 +71,8 @@ import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.BottomNavigation
 import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import io.sentry.Sentry
+import io.sentry.SpanStatus
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class)
 @Composable
@@ -91,6 +93,9 @@ internal fun Home(
                 HomeBottomNavigation(
                     selectedNavigation = currentSelectedItem,
                     onNavigationSelected = { selected ->
+                        Sentry.getSpan()?.finish(SpanStatus.OK)
+
+                        Sentry.startTransaction(selected::class.java.simpleName, "ui.screen.interaction", true)
                         navController.navigate(selected.route) {
                             launchSingleTop = true
                             restoreState = true
@@ -129,7 +134,9 @@ internal fun Home(
                     modifier = Modifier.fillMaxHeight(),
                 )
 
-                Divider(Modifier.fillMaxHeight().width(1.dp))
+                Divider(Modifier
+                    .fillMaxHeight()
+                    .width(1.dp))
             }
 
             AppNavigation(

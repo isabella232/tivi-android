@@ -82,6 +82,8 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
+import io.sentry.Sentry
+import io.sentry.SpanStatus
 import kotlinx.coroutines.launch
 
 @Composable
@@ -90,9 +92,15 @@ fun ShowSeasons(
     openEpisodeDetails: (episodeId: Long) -> Unit,
     initialSeasonId: Long? = null,
 ) {
+    Sentry.getSpan()?.finish(SpanStatus.OK)
+
+    val transaction = Sentry.startTransaction("ShowSeasons", "ui.screen.interaction", true)
     ShowSeasons(
         viewModel = hiltViewModel(),
-        navigateUp = navigateUp,
+        navigateUp = {
+            transaction.finish(SpanStatus.OK)
+            navigateUp()
+        },
         openEpisodeDetails = openEpisodeDetails,
         initialSeasonId = initialSeasonId,
     )

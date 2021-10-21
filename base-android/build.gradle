@@ -51,4 +51,6 @@ dependencies {
 
     implementation libs.hilt.library
     kapt libs.hilt.compiler
+
+    api libs.sentry
 }

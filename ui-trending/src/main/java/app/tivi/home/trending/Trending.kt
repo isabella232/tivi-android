@@ -24,16 +24,24 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import app.tivi.common.compose.EntryGrid
 import app.tivi.common.compose.rememberFlowWithLifecycle
+import io.sentry.Sentry
+import io.sentry.SpanStatus
 
 @Composable
 fun Trending(
     openShowDetails: (showId: Long) -> Unit,
     navigateUp: () -> Unit,
 ) {
+    Sentry.getSpan()?.finish(SpanStatus.OK)
+
+    val transaction = Sentry.startTransaction("Trending", "ui.screen.interaction", true)
     Trending(
         viewModel = hiltViewModel(),
         openShowDetails = openShowDetails,
-        navigateUp = navigateUp,
+        navigateUp = {
+            transaction.finish(SpanStatus.OK)
+            navigateUp()
+        },
     )
 }
 

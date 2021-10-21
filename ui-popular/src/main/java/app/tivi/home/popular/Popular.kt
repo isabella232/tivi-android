@@ -22,16 +22,23 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import app.tivi.common.compose.EntryGrid
 import app.tivi.common.compose.rememberFlowWithLifecycle
+import io.sentry.Sentry
+import io.sentry.SpanStatus
 
 @Composable
 fun Popular(
     openShowDetails: (showId: Long) -> Unit,
     navigateUp: () -> Unit,
 ) {
+    Sentry.getSpan()?.finish(SpanStatus.OK)
+    val transaction = Sentry.startTransaction("Popular", "ui.screen.interaction", true)
     Popular(
         viewModel = hiltViewModel(),
         openShowDetails = openShowDetails,
-        navigateUp = navigateUp,
+        navigateUp = {
+            transaction.finish(SpanStatus.OK)
+            navigateUp()
+        },
     )
 }
 

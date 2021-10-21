@@ -287,7 +287,9 @@ private fun NavGraphBuilder.addShowDetails(
         )
     ) {
         ShowDetails(
-            navigateUp = navController::navigateUp,
+            navigateUp = {
+                navController.navigateUp()
+            },
             openShowDetails = { showId ->
                 navController.navigate(LeafScreen.ShowDetails.createRoute(root, showId))
             },

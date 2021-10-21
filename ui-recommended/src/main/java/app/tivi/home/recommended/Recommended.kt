@@ -23,16 +23,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import app.tivi.common.compose.EntryGrid
+import io.sentry.Sentry
+import io.sentry.SpanStatus
 
 @Composable
 fun Recommended(
     openShowDetails: (showId: Long) -> Unit,
     navigateUp: () -> Unit,
 ) {
+    Sentry.getSpan()?.finish(SpanStatus.OK)
+
+    val transaction = Sentry.startTransaction("Recommended", "ui.screen.interaction", true)
     Recommended(
         viewModel = hiltViewModel(),
         openShowDetails = openShowDetails,
-        navigateUp = navigateUp,
+        navigateUp = {
+            transaction.finish(SpanStatus.OK)
+            navigateUp()
+        },
     )
 }
 

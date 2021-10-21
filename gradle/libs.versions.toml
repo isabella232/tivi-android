@@ -34,7 +34,8 @@ accompanist-pager-indicators = { module = "com.google.accompanist:accompanist-pa
 
 snapper = "dev.chrisbanes.snapper:snapper:0.1.0"
 
-android-pluginGradle = "com.android.tools.build:gradle:7.1.0-beta01"
+android-pluginGradle = "com.android.tools.build:gradle:7.2.0-alpha01"
+sentry-pluginGradle = "io.sentry:sentry-android-gradle-plugin:3.0.0-alpha.2"
 
 androidx-activity-compose = "androidx.activity:activity-compose:1.4.0-rc01"
 androidx-archCoreTesting = "androidx.arch.core:core-testing:2.1.0"
@@ -135,3 +136,5 @@ tmdbJava = "com.uwetrottmann.tmdb2:tmdb-java:2.5.0"
 traktJava = "com.uwetrottmann.trakt5:trakt-java:6.10.0"
 
 truth = "com.google.truth:truth:1.1.3"
+
+sentry = "io.sentry:sentry-android:5.2.4"

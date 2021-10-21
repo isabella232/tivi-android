@@ -43,6 +43,8 @@ buildscript {
         classpath libs.google.crashlyticsGradle
 
         classpath libs.hilt.pluginGradle
+
+        classpath libs.sentry.pluginGradle
     }
 }
 
@@ -84,6 +86,15 @@ subprojects {
 
             ktlint(libs.versions.ktlint.get())
             licenseHeaderFile rootProject.file('spotless/copyright.kt')
+        }
+    }
+
+    apply plugin: 'io.sentry.android.gradle'
+    sentry {
+        autoUpload = false
+
+        tracingInstrumentation {
+            enabled = true
         }
     }
 

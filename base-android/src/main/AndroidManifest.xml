@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2017 Google, Inc.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,5 +15,24 @@
   ~
   -->
 
-<manifest package="app.tivi.base">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="app.tivi.base">
+
+    <application>
+        <meta-data
+            android:name="io.sentry.dsn"
+            android:value="https://2297749c05ae4832bfe51a4d26455407@o447951.ingest.sentry.io/6019519" />
+
+        <meta-data
+            android:name="io.sentry.debug"
+            android:value="true" />
+
+        <meta-data
+            android:name="io.sentry.traces.sample-rate"
+            android:value="1.0" />
+
+        <!--        <meta-data-->
+        <!--            android:name="io.sentry.traces.activity.auto-finish.enable"-->
+        <!--            android:value="false" />-->
+    </application>
 </manifest>
