@@ -1,0 +1,38 @@
+clean_build_debug_without_cache {
+    tasks = ["clean", "assembleDebug"]
+    warm-ups = 4
+    gradle-args = ["--no-build-cache"]
+}
+
+clean_build_debug_with_cache {
+    tasks = ["clean", "assembleDebug"]
+    show-build-cache-size = true
+    warm-ups = 4
+}
+
+clean_build_debug_with_cache_clear_transform_cache {
+    tasks = ["clean", "assembleDebug"]
+    warm-ups = 4
+    clear-transform-cache-before = SCENARIO
+}
+
+clean_build_release_no_cache_no_daemon {
+    tasks = ["clean", "bundleRelease"]
+    gradle-args = ["--no-build-cache", "--no-daemon"]
+}
+
+incremental_build_abi_change_to_data_module {
+    tasks = [":data:assemble"]
+
+    show-build-cache-size = true
+    apply-abi-change-to = "data/src/main/java/app/tivi/data/daos/EpisodesDao.kt"
+    warm-ups = 4
+}
+
+incremental_build_abi_change_to_other_module {
+    tasks = [":ui-account:assembleDebug"]
+
+    show-build-cache-size = true
+    apply-abi-change-to = "ui-account/src/main/java/app/tivi/account/AccountUiViewModel.kt"
+    warm-ups = 4
+}
