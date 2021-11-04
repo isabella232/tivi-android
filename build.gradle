@@ -89,14 +89,14 @@ subprojects {
         }
     }
 
-    apply plugin: 'io.sentry.android.gradle'
-    sentry {
-        autoUpload = false
+   apply plugin: 'io.sentry.android.gradle'
+   sentry {
+       autoUpload = false
 
-        tracingInstrumentation {
-            enabled = true
-        }
-    }
+       tracingInstrumentation {
+           enabled = true
+       }
+   }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
         kotlinOptions {
